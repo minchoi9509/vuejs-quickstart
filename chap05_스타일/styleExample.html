@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Inline Event</title>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <style>
+        .layout1 {
+            margin : 30px;
+        }
+
+        .set1 { background-color: aqua; color:purple; }
+        .set2 { text-align:center; width:120px; }
+        .set3 { border:sandybrown dashed 1px; }
+
+        .score { border : solid 1px black;}
+        .warning { background-color : orange; color: purple; }
+        .warnimamge { width : 18px; height : 18px; top: 5px; position: relative;}
+    </style>
+</head>
+<body>
+<div id="ex05_04" class="container layout1">
+    <button id="btn1" v-bind:style="[myColor, myLayout]">버튼1</button>
+    <p></p>
+    <!-- v-bind:class를 이용해서 클래스 적용하기 > boolean 값(T/F) 이용 -->
+    <button id="btn1" v-bind:class="mystyle">버튼1</button>
+    <p>
+        <input type="checkbox" v-model="mystyle.set1" value="true" />set1 디자인<br/>
+        <input type="checkbox" v-model="mystyle.set2" value="true" />set2 디자인<br/>
+        <input type="checkbox" v-model="mystyle.set3" value="true" />set3 디자인<br/>
+    </p>
+</div>
+
+<div id="ex05_07">
+    <div>
+        <p>1부터 100까지만 입력가능합니다.</p>
+        <div>
+            <!-- v-model.number : input 폼을 사용하여 입력값을 받는 경우 숫자 또는 문자를 number 즉 숫자로 자동으로 바꾸어주는 방법 -->
+            점수 : <input type="text" class="score" v-model.number="score" v-bind:class="info" />
+            <img src="images/error.png" class="warnimage" v-show="info.warning" />
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+var vm = new Vue({
+    el: '#ex05_04',
+    data: {
+        myColor : { 
+            backgroundColor : 'purple',
+            color : 'yellow'
+        },
+        myLayout : {
+            width : '150px',
+            height : '80px',
+            textAlign : 'center'
+        },
+        mystyle : { 
+            set1: false, 
+            set2: false, 
+            set3: false 
+        } 
+    }
+});
+
+var vm2 = new Vue({
+    el: '#ex05_07',
+    data: {
+        score : 0
+    }, 
+    computed : {
+        info : function() {
+            if(this.score >= 1 && this.score <= 100) 
+                return { warning : false };
+            else 
+                return { warning : true }; 
+        }
+    }
+});
+</script>
+</html>

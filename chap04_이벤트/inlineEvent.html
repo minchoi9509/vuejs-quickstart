@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Inline Event</title>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <style>
+        .layout1 {
+            margin : 30px;
+        }
+    </style>
+</head>
+<body>
+<div id="ex04_01" class="container layout1">
+    <p><input type="text" v-model="amount" class="form-control" /></p>
+    <p>
+        <button id="deposit" @click="balance += parseInt(amount)" class="btn btn-primary">예금</button>
+        <button id="withdraw" @click="balance -= parseInt(amount)" class="btn btn-primary">인출</button>
+    </p>
+    <h3>계좌 잔고 : {{ balance }} </h3>
+</div>
+</body>
+<script type="text/javascript">
+var vm = new Vue({
+    el: '#ex04_01',
+    data: {
+        amount : 0,
+        balance : 0
+    }
+});
+</script>
+</html>

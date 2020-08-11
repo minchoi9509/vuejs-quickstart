@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EX06_08</title>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+</head>
+<body>
+<!-- 자식 component -->
+<div id="ex06_12" class="container">
+    <!-- listTemplate/listtemplate2 >> my-message component만 인식 가능-->
+    <!-- <list-component my-message="Hello"></list-component>
+    <list-component myMessage="신짜오"></list-component>
+    <list-component myMessage="니하오마"></list-component> -->
+
+    <!-- listTemplate/listtemplate3
+        >> 숫자형으로 넘겨야 하는 경우
+        앞에 컬럼(`:`)이 붙은 :count를 통해서 넘기면 숫자형으로 넘어가고, required(필수요소)이여도 아예 전달하지 않으면 렌더링에는 문제가 없음. 
+     -->
+    <list-component message="Hello" :count="100"></list-component>
+    <list-component message="신짜오" :count="21"></list-component>
+    <list-component message="니하오마"></list-component>
+    <list-component count="1000"></list-component>
+</div>
+</body>
+<template id='listTemplate'>
+    <li>{{message}}</li>
+</template>
+
+<template id='listTemplate2'>
+    <li>{{myMessage}}</li>
+</template>
+
+<template id='listTemplate3'>
+    <li>{{message}}</li>
+</template>
+
+<script type="text/javascript">
+Vue.component('list-component', {
+    template : '#listTemplate3',
+    // 부모 component > 필요한 정보 전달. 부모에서 자식으로 단방향만 가능.
+    // 태그에서 속성명을 사용할 정보를 전달할 때 케밥 표기법 사용 해야 함.  
+    // props : ['myMessage']
+
+    // 객체 형태로 속성 전달하기
+    props : {
+        message : { type: String, default : '안녕하세요'},
+        count : { type: Number, required: true}
+    }
+})
+
+Vue.config.devtools = true;
+var v = new Vue({
+    el : '#ex06_12'
+})
+</script>
+</html>

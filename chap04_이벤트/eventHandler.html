@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Inline Event</title>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <style>
+        .layout1 {
+            margin : 30px;
+        }
+    </style>
+</head>
+<body>
+<div id="ex04_02" class="container layout1">
+    <p><input type="text" v-model="amount" class="form-control" /></p>
+    <p>
+        <button id="deposit" @click="deposit" class="btn btn-primary">예금</button>
+        <button id="withdraw" @click="withdraw" class="btn btn-primary">인출</button>
+    </p>
+    <h3>계좌 잔고 : {{ balance }} </h3>
+</div>
+
+<!-- 
+    contextmenu : 오른쪽 마우스 클릭 했을 때 나오는 메뉴 
+-->
+<div id="ex04_04" v-on:contextmenu="ctxStop">
+    <a href="https://naver.com" @click="confirmFB">네이버</a>
+</div>
+
+</div>
+</body>
+<script type="text/javascript">
+var vm = new Vue({
+    el: '#ex04_02',
+    data: {
+        amount : 0,
+        balance : 0
+    },
+    methods:{
+        /* 
+            이벤트를 처리하는 메서드는 첫 번째 파라미터로 이벤트 객체를 전달 받음. 
+            # 이벤트 객체의 주요 공통 속성
+            target : 이벤트가 발생한 HTML 요소를 리턴함
+            path : 배열값. 이벤트 발생 HTML 요소로부터 document, window 객체로까지 거슬러 올라가는 경로를 나타냄
+            bubbles : 현재의 이벤트가 버블링을 일으키는 이벤틑인지 여부 리턴
+            ... 등등
+
+            # 키보드 이벤트 관련 속성
+            altKey, shiftKey,, ctrlKey.. 
+        */
+        deposit : function(e) {
+            var amt = parseInt(this.amount);
+            if(amt <= 0) {
+                alert("0보다 큰 값을 예금해야 합니다.");
+            }else {
+                this.balance += amt; 
+            }
+        },
+        withdraw : function(e) {
+            var amt = parseInt(this.amount);
+            if(amt <= 0) {
+                alert("0보다 큰 값을 인출해야 합니다.");
+            }else  if(amt > this.balance){
+                alert("잔고보다 많은 금액을 인출할 수 없습니다."); 
+            }else {
+                this.balance -= amt; 
+            }
+        }
+    }
+});
+
+/*
+    # 이벤트 객체의 주요 메서드
+    preventDefault() : 기본 이벤트의 자동 실행을 중지시킴 
+        기본 이벤트 ? 개발자가 이벤트를 연결하지 않았음에도 뭔가 실행되는 기능을 가진 것들 (ex: <a>, <form>, <input type="text"> ..)
+    stopPropagation() : 이벤트의 전파를 막음 
+*/
+var vm2 = new Vue({
+    el : "#ex04_04",
+    methods : {
+        ctxStop : function(e) {
+            e.preventDefault();
+        },
+        confirmFB : function(e) {
+            if(!confirm("네이버 이동?")) {
+                e.preventDefault(); 
+            }
+        }
+    }
+})
+</script>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EX06_08</title>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+</head>
+<body>
+<div id="ex06_10" class="container">
+    <time-component></time-component>
+    <time-component></time-component>
+</div>
+</body>
+<template id='timeTemplate'>
+    <div>
+        <span>{{nowTS}}</span>
+        <button v-on:click="timeClick">현재시간</button>
+    </div>
+</template>
+<script type="text/javascript">
+Vue.component('time-component', {
+    template : '#timeTemplate',
+    // data : { nowTS : 0 }, > 객체를 직접적으로 지정하면 컴포넌트가 정상적으로 렌더링되지 않음. 
+    /*
+        data 옵션에 함수가 주어져서 함수가 호출되어 리턴된 객체가 data 옵션에 주어진다. 
+        동일한 컴포넌트가 여러번 사용되더라도 동일한 객체를 가리키는 것이 아니라 호출될 때마다 만들어진 객체가 리턴되기 때문.
+        매번 만들어진 객체가 리턴되기 때문에 서로 다른 객체를 참조하게 됨. 
+    */
+    data : function() {
+        return { nowTS : 0 }
+    },
+    methods : {
+        timeClick : function(e) {
+            this.nowTS = (new Date()).getTime();
+        }
+    }
+})
+
+Vue.config.devtools = true;
+var v = new Vue({
+    el : '#ex06_10'
+})
+</script>
+</html>

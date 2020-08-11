@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EX06_10</title>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+</head>
+<!-- child component 시작 -->
+<style>
+    .buttonstyle { width : 120px; height: 30px; text-align: center;}
+</style>
+<template id="childTemplate">
+    <div>
+        <!-- data-lang 특성에 value 값 바인딩 -->
+        <button class="buttonstyle" @click="clickEvent" :data-lang="buttonInfo.value">{{buttonInfo.text}}</button>
+    </div>
+</template>
+<script type="text/javascript">
+    Vue.component('child-component', {
+        template : '#childTemplate',
+        // 부모 컴포넌트로부터 값을 전달 받음
+        props : ['buttonInfo'],
+        methods : {
+            clickEvent : function(e) {
+                /* 
+                    자식 컴포넌트 내부에서 버튼이 클릭되면 $emit() 메서드를 이용해서 timeclick 이벤트를 발신시킴 
+                    부모 컴포넌트에서는 v-on을 이용해서 timeclick 이벤트를 처리
+                    $emit()을 이용할 때 인자 전달 가능 > 자유롭게 정의 가능 함. 자식 컴포넌트로부터 부모 컴포넌트로 필요한 정보를 전달함. 
+                */
+                this.$emit('timeclick', e.target.innerText, e.target.dataset.lang);
+            }
+        }
+    })
+</script>
+<!--child component 끝-->
+<!-- parent component 시작 -->
+<template id="parentTemplate">
+    <div>
+        <child-component v-for="s in buttons" :button-info="s" @timeclick="timeclickEvent"></child-component>
+        <hr/>
+        <div>{{msg}}</div>
+    </div>
+</template>
+<script type="text/javascript">
+    Vue.component('parent-component', {
+        template : '#parentTemplate',
+        props : ['buttons'],
+        // 해당 컴포넌트 내에서만 사용하기 위하여 정의함
+        data: function() {
+            return { msg: "" };
+        },
+        methods : {
+            timeclickEvent : function(k, v) {
+                this.msg = k + ", " + v;
+            }
+        }
+    })
+</script>
+<!--parent component 끝-->
+<body>
+    <div id="ex06_10">
+        <parent-component :buttons="buttons"></parent-component>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.devtools = true;
+    var vm = new Vue({
+        el : '#ex06_10',
+        data : {
+            buttons : [
+                { text : "Hello", value : "영어" },
+                { text : "신짜오", value : "베트남어" },
+                { text : "니하오", value : "중국어" }
+            ]
+        }
+    })
+</script>
+
+</html>

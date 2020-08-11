@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EX06_07</title>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+</head>
+<body>
+<div id="ex06_07" class="container">
+    <select>
+        <!-- 
+        DOM 요소를 제대로 랜더링하기 위해서는 is 특성이 필요
+        <option-component></option-component>
+        -->        
+        <option is = "option-component"></option>
+        <option is = "option-component"></option>
+    </select>
+</div>
+</body>
+<script type="text/javascript">
+Vue.component('option-component', {
+    template : '<option>hello</option>'
+})
+
+Vue.config.devtools = true;
+var v = new Vue({
+    el : '#ex06_07'
+})
+</script>
+</html>

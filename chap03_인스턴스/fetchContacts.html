@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to Vue</title>
+  <script src="https://unpkg.com/vue"></script>
+  
+  <!-- underscore 라이브러리 사용 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
+  
+  <!-- fetch, promise -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js"></script>
+
+  <!-- style -->
+  <style>
+    #list {
+        width: 400px;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    #list td, #list th {
+        border: 1px solid black;
+        text-align: center;
+    }
+
+    #list > thead > tr {
+        color: yellow;
+        background-color: purple;
+    }
+
+    /* 템플릿 문자열이 일시적으로 나타나는 현상 사라지게 하기 > v-cloak*/
+    [v-cloak] { display: none; }
+</style>
+
+</head>
+<body>
+  <div id="ex03_07">
+    <p>
+        이름 : <input type="text" v-model="name" placeholder="두자 이상 입력하세요" />
+    </p>
+    <table id="list">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>이름</th>
+                <th>전화번호</th>
+                <th>주소</th>
+            </tr>
+        </thead>
+        <tbody id="contacts">
+            <tr v-for="contact in contactlist">
+                <td>{{contact.no}}</td>
+                <td>{{contact.name}}</td>
+                <td>{{contact.tel}}</td>
+                <td>{{contact.address}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div v-show="isProcessing === true">조회중</div>
+  </div>
+  <script>
+      var vm = new Vue({
+          el: '#ex03_07',
+          data: {
+              name : "",
+              isProcessing : false,
+              contactlist : []
+          },
+          watch:{
+              // name 속성의 변화를 감지
+              // 계산형 속성으로 구현할 수 없음 > why? 값을 직접 리턴해야 하기 때문. 이 경우에는 메소드를 호출함. 
+              name : function(val) {
+                  if(val.length >= 2) {
+                      this.fetchContacts();
+                  }else {
+                      this.contactlist = []; 
+                  }
+              }
+          },
+          methods : {
+            // underscore 라이브러리의 _.debounce() 함수를 이용해 일정 시간이 지나도록 연속적인 호출이 일어나지 않으면 실제 API 요청하도록 함 
+            fetchContacts : _.debounce(function() {
+                this.contactlist = [];
+                this.isProcessing = true;
+                var url = "http://sample.bmaster.kro.kr/contacts_long/search/" + this.name;
+                var vm = this;
+                /* 
+                    fetch() 메서드의 리턴값은 promise 객체 (=비동기 처리를 위해 주로 사용하는 객체)
+                    fetch가 호출되고 나서 서버로부터 응답이 오면, then()에 전달한 함수가 호출됨
+                */
+                fetch(url)
+                    .then(function(response){
+                        console.log(response); // response 객체 > status, url.. 막 이런 것들 return 해 해줌. 
+                        return response.json()
+                    }).then(function(json) {
+                        console.log(json); // 검색에 대한 결과값
+                        vm.contactlist = json;
+                        vm.isProcessing = false;
+                    }).catch(function(ex) {
+                        console.log('parsing failed', ex);
+                        vm.contactlist = [];
+                        vm.isProcessing = false; 
+                    })  
+              })
+          }
+      })
+  </script>
+</body>
+</html>

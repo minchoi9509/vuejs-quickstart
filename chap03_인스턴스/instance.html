@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to Vue</title>
+  <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+  <div id="ex03_02">
+    <input type = "text" v-model="num" /><br/>
+    1부터 입력된 수까지의 합 : <span> {{sum}} </span>
+  </div>
+
+  <div id="ex03_03">
+    <input type = "text" v-model="amount" /><br/>
+    금액 : <span> {{amount}}원 </span>
+  </div>
+
+  <div id="ex03_04">
+    <input type = "text" v-model="num" /><br/>
+    1부터 입력된 수까지의 합 : <span> {{sum()}} </span>
+  </div>
+
+  <div id="ex03_05">
+    x : <input type="text" v-model="x" /><br/>
+    y : <input type="text" v-model="y" /><br/>
+    덧셈 결과 : {{sum}}
+  </div>
+
+  <script>
+    // computed 계산형 속성 
+    var ex03_02 = new Vue({
+      el: '#ex03_02',
+      data: {
+        num : 0
+      },
+      computed : {
+        sum : function() {
+          var n = Number(this.num); 
+          if(Number.isNaN(n) || n < 1) 
+            return 0;
+          return ((1+n) * n) / 2;
+        }
+      }
+    })
+
+    // 계산형 속성의 getter/setter 메서드
+    var ex03_03 = new Vue({
+      el: '#ex03_03',
+      data : { 
+        amt : 1234567
+       },
+      computed : {
+        /* 
+          amount : 계산형 속성
+          get, set 함수를 이용해서 자바의 getter/setter 형태를 만들어 낼 수 있음
+        */
+        amount : {
+          get: function() {
+            console.log('get');
+            var s = new String(""+this.amt);
+            console.log('s : ' + s)
+            var result = "";
+            var num = 0;
+            for(var i=s.length-1; i >= 0; i--) {
+              result = s[i] + result;
+              if(num % 3 == 2 && i !== 0)
+                result = "," + result;
+              num++;
+              console.log(result); 
+            }
+
+            return result;
+          },
+          set : function(amount) {
+            // input 요소 생성 뒤에 set 되면서 메소드 호출 확인 가능
+            // 매개변수로 받고 있는 amount가 input에서 들어오는 값
+            console.log('set');
+            if(typeof(amount) === "string") {
+              var result = parseInt(amount.replace(/,/g, ""))
+              if(isNaN(result)) this.amt = 0;
+              else this.amt = result;
+            }else if(typeof(amount) === "number"){
+              this.amt = amount;
+            }
+          }
+        }
+      }
+    });
+
+    /*
+     <-> computed : 내부 작동 방식에서의 차이 존재
+    계산형 속성(computed)은 종속된 값에 의해 결과값이 캐싱됨. 예를 들어 data.num이 동일한 값이라면 캐싱된 결과값이 반환됨. 
+    하지만 methods의 경우에는 매번 sum() 메서드가 실행됨. 
+    */
+    var ex03_04 = new Vue({
+      el: '#ex03_04',
+      data: {
+        num : 0
+      },
+      methods : {
+        // 메서드 작성시에는 ES6가 제공하는 화살표 함수를 사용하면 안 됨 
+        // 화살표 함수 내부에서는 this가 vue 인스턴스를 가리키지 않고 전역 객체를 가리키기 때문. 
+        sum : function() {
+          var n = Number(this.num); 
+          if(Number.isNaN(n) || n < 1) 
+            return 0;
+          return ((1+n) * n) / 2;
+        }
+      }
+    })
+
+    // 관찰 속성(watch) : 주로 긴 처리 시간이 필요한 비동기 처리에 적합
+    var ex03_05 = new Vue({
+      el: '#ex03_05',
+      data: {
+        x: 0,
+        y: 0,
+        sum: 0
+      },
+      watch : {
+        // x 속성이 변경될 때 호출되는 함수
+        // watch 단점 : 값이 바뀔 때마다 매번 함수가 호출됨 > 하지만 이 예제의 경우에는 그럴 필요 없이 sum이 참조 될 때 한번 계산을 해주는 것이 더욱 효율적
+        x: function(v) {
+          console.log("## x 변경");
+          var result = Number(v) + Number(this.y);
+          if(isNaN(result)) this.sum = 0;
+          else this.sum = result;
+        },
+        y: function(v) {
+          console.log("## y 변경");
+          this.y = v;
+          var result = Number(this.x) + Number(v);
+          if(isNaN(result)) this.sum = 0;
+          else this.sum = result;        }
+      }
+    })
+
+    /*
+    같은 방식, 더 효율적인 computed 속성
+    
+    var ex03_05 = new Vue({
+      el: '#ex03_05',
+      data: {
+        x: 0,
+        y: 0
+      },
+      computed : {
+        sum: function() {
+          var result = Number(this.x) + Number(this.y);
+          if(isNaN(result)) return 0;
+          else return result; 
+        }
+      }
+    })
+    */
+  </script>
+</body>
+</html>
