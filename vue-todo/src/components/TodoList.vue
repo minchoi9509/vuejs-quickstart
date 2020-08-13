@@ -31,9 +31,6 @@
             removeTodo(todoItem, index) {
                 this.$emit('removeTodo', todoItem, index); 
             }
-        },
-        created() {
-            console.log(this.todoData); 
         }
     }
 </script>
