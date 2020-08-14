@@ -13,7 +13,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-export const store = new Vuex.store({
+export const store = new Vuex.Store({
     state : {
         // 공통 관리되는 상태값 관리
         counter : 0
