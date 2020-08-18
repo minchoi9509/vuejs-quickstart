@@ -14,11 +14,17 @@
                     # 돔 조작 ? 화면을 다시 그려야 하는 렌더링 > 프레임워크에서 순서를 조작하여 돔 이동을 최소화함 
             -->
             <li v-for="(todoItem, index) in todoData" :key="todoItem">
-                <i class="checkBtn fas fa-check" aria-hidden="true"></i>
-                {{ todoItem }}
-                <span class="removeBtn" type="button" @click="removeTodo(todoItem, index)">
-                    <i class="far fa-trash-alt" aria-hidden="true"></i>
-                </span>
+                <i class="check-btn fas fa-check" aria-hidden="true"></i>
+                <span class="text-box">{{ todoItem }}</span>
+                <input type="text" />
+                <div class="icon-box">
+                    <span class="update-btn" type="button" >
+                        <i class="far fa-edit"></i>
+                    </span>
+                    <span class="remove-btn" type="button" @click="removeTodo(todoItem, index)">
+                        <i class="far fa-trash-alt" aria-hidden="true"></i>
+                    </span>
+                </div>
             </li>
         </transition-group>
     </section>
@@ -53,14 +59,23 @@
         border-radius: 5px;
     }
 
-    .checkBtn {
+    .check-btn {
         line-height: 45px;
         color: #62acde;
         margin-right: 5px;
     }
-    
-    .removeBtn {
-        margin-left : auto;
+
+    .icon-box {
+        display: inline-block;
+        position: absolute;
+        right : 20px; 
+    }
+
+    .update-btn {
+        color : #d0d0d0;
+    }
+
+    .remove-btn {
         color: #de4343;
     }
 
